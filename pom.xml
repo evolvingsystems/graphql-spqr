@@ -26,13 +26,9 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>esc-common-java</id>
+            <url>https://pkgs.dev.azure.com/evolvingsystemsconsulting/_packaging/esc-common-java/maven/v1</url>
         </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
     </distributionManagement>
     <issueManagement>
         <system>GitHub Issue Tracking</system>
