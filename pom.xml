@@ -22,7 +22,6 @@
         <connection>scm:git:https://github.com/evolvingsystems/graphql-spqr</connection>
         <developerConnection>scm:git:https://github.com/evolvingsystems/graphql-spqr</developerConnection>
         <url>https://github.com/evolvingsystems/graphql-spqr</url>
-        <tag>graphql-spqr-v0.12.5.1-esc</tag>
     </scm>
     <distributionManagement>
         <repository>
