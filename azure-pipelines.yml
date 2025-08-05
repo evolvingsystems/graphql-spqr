@@ -1,0 +1,11 @@
+trigger: none
+
+resources:
+  repositories:
+    - repository: esc-common-pipeline-templates
+      type: github
+      name: evolvingsystems/esc-common-pipeline-templates
+      endpoint: evolvingsystems
+
+extends:
+  template: java/devops/build_check.yml@esc-common-pipeline-templates
