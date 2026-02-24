@@ -59,7 +59,7 @@ public class GsonValueMapper implements ValueMapper, InputFieldBuilder {
         }
         try {
             if (Scalars.isScalar(type.getType()) && !isPrimitive(type) && !isBoxType(type.getType())) {
-                return (T) Scalars.toGraphQLScalarType(type.getType()).getCoercing().parseValue(json);
+                return (T) Scalars.toGraphQLScalarType(type.getType()).getCoercing().parseValue(json, null, null);
             }
             return gson.fromJson(json, type.getType());
         } catch (JsonSyntaxException e) {
@@ -70,7 +70,7 @@ public class GsonValueMapper implements ValueMapper, InputFieldBuilder {
     @Override
     public String toString(Object output, AnnotatedType type) {
         if (output != null && Scalars.isScalar(type.getType())) {
-            output = Scalars.toGraphQLScalarType(type.getType()).getCoercing().serialize(output);
+            output = Scalars.toGraphQLScalarType(type.getType()).getCoercing().serialize(output, null, null);
         }
         if (output == null || output instanceof String) {
             return (String) output;

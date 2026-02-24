@@ -1,6 +1,8 @@
 package io.leangen.graphql.util;
 
+import graphql.GraphQLContext;
 import graphql.GraphQLException;
+import graphql.execution.CoercedVariables;
 import graphql.language.ArrayValue;
 import graphql.language.BooleanValue;
 import graphql.language.EnumValue;
@@ -19,6 +21,7 @@ import graphql.schema.GraphQLAppliedDirective;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLScalarType;
 import io.leangen.geantyref.GenericTypeReflector;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -73,7 +76,7 @@ public class Scalars {
             .description("UUID String")
             .coercing(new Coercing<UUID, String>() {
                 @Override
-                public String serialize(Object dataFetcherResult) {
+                public String serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (dataFetcherResult instanceof UUID) {
                         return dataFetcherResult.toString();
                     }
@@ -84,7 +87,7 @@ public class Scalars {
                 }
 
                 @Override
-                public UUID parseValue(Object input) {
+                public UUID parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (input instanceof String) {
                         try {
                             return UUID.fromString((String) input);
@@ -99,7 +102,7 @@ public class Scalars {
                 }
 
                 @Override
-                public UUID parseLiteral(Object input) {
+                public UUID parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                     StringValue string = literalOrException(input, StringValue.class);
                     try {
                         return UUID.fromString(string.getValue());
@@ -114,7 +117,7 @@ public class Scalars {
             .description("URI String")
             .coercing(new Coercing<URI, String>() {
                 @Override
-                public String  serialize(Object dataFetcherResult) {
+                public String  serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (dataFetcherResult instanceof URI) {
                         return dataFetcherResult.toString();
                     } else if (dataFetcherResult instanceof String) {
@@ -125,7 +128,7 @@ public class Scalars {
                 }
 
                 @Override
-                public URI parseValue(Object input) {
+                public URI parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (input instanceof String) {
                         try {
                             return URI.create((String) input);
@@ -140,7 +143,7 @@ public class Scalars {
                 }
 
                 @Override
-                public URI parseLiteral(Object input) {
+                public URI parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                     StringValue string = literalOrException(input, StringValue.class);
                     try {
                         return URI.create(string.getValue());
@@ -155,7 +158,7 @@ public class Scalars {
             .description("URL String")
             .coercing(new Coercing<URL, String>() {
                 @Override
-                public String serialize(Object dataFetcherResult) {
+                public String serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (dataFetcherResult instanceof URL) {
                         return dataFetcherResult.toString();
                     } else if (dataFetcherResult instanceof String) {
@@ -166,7 +169,7 @@ public class Scalars {
                 }
 
                 @Override
-                public URL parseValue(Object input) {
+                public URL parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (input instanceof String) {
                         try {
                             return new URL((String) input);
@@ -181,7 +184,7 @@ public class Scalars {
                 }
 
                 @Override
-                public URL parseLiteral(Object input) {
+                public URL parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                     StringValue string = literalOrException(input, StringValue.class);
                     try {
                         return new URL(string.getValue());
@@ -196,7 +199,7 @@ public class Scalars {
             .description("Base64-encoded binary")
             .coercing(new Coercing<byte[], String>() {
                 @Override
-                public String serialize(Object dataFetcherResult) {
+                public String serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (dataFetcherResult instanceof byte[]) {
                         return Base64.getEncoder().encodeToString((byte[]) dataFetcherResult);
                     } else if (dataFetcherResult instanceof String) {
@@ -207,7 +210,7 @@ public class Scalars {
                 }
 
                 @Override
-                public byte[] parseValue(Object input) {
+                public byte[] parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (input instanceof String) {
                         try {
                             return Base64.getDecoder().decode((String) input);
@@ -222,7 +225,7 @@ public class Scalars {
                 }
 
                 @Override
-                public byte[] parseLiteral(Object input) {
+                public byte[] parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                     StringValue string = literalOrException(input, StringValue.class);
                     try {
                         return Base64.getDecoder().decode(string.getValue());
@@ -237,7 +240,7 @@ public class Scalars {
             .description("A fully qualified class name")
             .coercing(new Coercing<Object, String>() {
                 @Override
-                public String serialize(Object dataFetcherResult) {
+                public String serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (dataFetcherResult instanceof Class) {
                         return ((Class) dataFetcherResult).getName();
                     } else if (dataFetcherResult instanceof String) {
@@ -248,12 +251,12 @@ public class Scalars {
                 }
 
                 @Override
-                public Object parseValue(Object input) {
+                public Object parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     throw new CoercingParseValueException("Class can not be used as input");
                 }
 
                 @Override
-                public Object parseLiteral(Object input) {
+                public Object parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                     throw new CoercingParseLiteralException("Class can not be used as input");
                 }
             }).build();
@@ -263,7 +266,7 @@ public class Scalars {
             .description("Built-in Locale")
             .coercing(new Coercing<Locale, String>() {
                 @Override
-                public String serialize(Object dataFetcherResult) {
+                public String serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (dataFetcherResult instanceof Locale) {
                         return ((Locale) dataFetcherResult).toLanguageTag();
                     } else if (dataFetcherResult instanceof String) {
@@ -274,7 +277,7 @@ public class Scalars {
                 }
 
                 @Override
-                public Locale parseValue(Object input) {
+                public Locale parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                     if (input instanceof String) {
                         return Locale.forLanguageTag((String) input);
                     }
@@ -285,7 +288,7 @@ public class Scalars {
                 }
 
                 @Override
-                public Locale parseLiteral(Object input) {
+                public Locale parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                     StringValue string = literalOrException(input, StringValue.class);
                     return Locale.forLanguageTag(string.getValue());
                 }
@@ -337,7 +340,7 @@ public class Scalars {
         if (Date.class.equals(date.getClass())) {
             return date.toInstant().toString();
         } else if (isScalar(date.getClass())) {
-            return Scalars.toGraphQLScalarType(date.getClass()).getCoercing().serialize(date).toString();
+            return Scalars.toGraphQLScalarType(date.getClass()).getCoercing().serialize(date, null, null).toString();
         } else {
             throw serializationException(date, Date.class, java.sql.Date.class, Time.class, Timestamp.class);
         }
@@ -345,12 +348,12 @@ public class Scalars {
 
     private static final Coercing<Object, Object> MAP_SCALAR_COERCION = new Coercing<Object, Object>() {
         @Override
-        public Object serialize(Object dataFetcherResult) {
+        public Object serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
             return dataFetcherResult;
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public Object parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
             if (input instanceof Map) {
                 return input;
             }
@@ -358,13 +361,8 @@ public class Scalars {
         }
 
         @Override
-        public Object parseLiteral(Object input) throws CoercingParseLiteralException {
-            return parseLiteral(input, Collections.emptyMap());
-        }
-
-        @Override
-        public Object parseLiteral(Object input, Map<String, Object> variables) {
-            return parseObjectValue(literalOrException(input, ObjectValue.class), variables);
+        public Object parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
+            return parseObjectValue(literalOrException(input, ObjectValue.class), variables.toMap());
         }
     };
 
@@ -379,24 +377,19 @@ public class Scalars {
 
     private static final Coercing<Object, Object> OBJECT_SCALAR_COERCION = new Coercing<Object, Object>() {
         @Override
-        public Object serialize(Object dataFetcherResult) {
+        public Object serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
             GraphQLScalarType scalar = toGraphQLScalarType(dataFetcherResult.getClass());
-            return scalar != null ? scalar.getCoercing().serialize(dataFetcherResult) : dataFetcherResult;
+            return scalar != null ? scalar.getCoercing().serialize(dataFetcherResult, graphQLContext, locale) : dataFetcherResult;
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public Object parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
             return input;
         }
 
         @Override
-        public Object parseLiteral(Object input) throws CoercingParseLiteralException {
-            return parseLiteral(input, Collections.emptyMap());
-        }
-
-        @Override
-        public Object parseLiteral(Object input, Map<String, Object> variables) {
-            return parseObjectValue(((Value) input), variables);
+        public Object parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
+            return parseObjectValue(input, variables.toMap());
         }
     };
 
@@ -458,19 +451,19 @@ public class Scalars {
 
                     @Override
                     @SuppressWarnings("unchecked")
-                    public String serialize(Object dataFetcherResult) {
+                    public String serialize(@NonNull Object dataFetcherResult, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                         if (type.isInstance(dataFetcherResult)) {
                             try {
                                 return toString.apply((T) dataFetcherResult);
                             } catch (Exception e) {
-                                throw new CoercingSerializeException("Value " + dataFetcherResult + " could not be serialized");
+                                throw new CoercingSerializeException("Value " + dataFetcherResult + " could not be serialized", e);
                             }
                         }
                         throw serializationException(dataFetcherResult, type);
                     }
 
                     @Override
-                    public T parseValue(Object input) {
+                    public T parseValue(@NonNull Object input, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) {
                         try {
                             if (input instanceof String) {
                                 return fromString.apply((String) input);
@@ -488,7 +481,7 @@ public class Scalars {
                     }
 
                     @Override
-                    public T parseLiteral(Object input) {
+                    public T parseLiteral(@NonNull Value<?> input, @NonNull CoercedVariables variables, @NonNull GraphQLContext graphQLContext, @NonNull Locale locale) throws CoercingParseLiteralException {
                         try {
                             if (input instanceof StringValue) {
                                 return fromString.apply(((StringValue) input).getValue());

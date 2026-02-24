@@ -68,7 +68,7 @@ public class JacksonValueMapper implements ValueMapper, InputFieldBuilder {
         }
         try {
             if (Scalars.isScalar(type.getType()) && !isPrimitive(type) && !isBoxType(type.getType())) {
-                return (T) Scalars.toGraphQLScalarType(type.getType()).getCoercing().parseValue(json);
+                return (T) Scalars.toGraphQLScalarType(type.getType()).getCoercing().parseValue(json, null, null);
             }
             return objectMapper.readValue(json, objectMapper.getTypeFactory().constructType(type.getType()));
         } catch (IOException e) {
@@ -79,7 +79,7 @@ public class JacksonValueMapper implements ValueMapper, InputFieldBuilder {
     @Override
     public String toString(Object output, AnnotatedType type) {
         if (output != null && Scalars.isScalar(type.getType())) {
-            output = Scalars.toGraphQLScalarType(type.getType()).getCoercing().serialize(output);
+            output = Scalars.toGraphQLScalarType(type.getType()).getCoercing().serialize(output, null, null);
         }
         if (output == null || output instanceof String) {
             return (String) output;

@@ -1,5 +1,6 @@
 package io.leangen.graphql;
 
+import graphql.execution.CoercedVariables;
 import graphql.language.IntValue;
 import graphql.language.StringValue;
 import graphql.schema.Coercing;
@@ -59,9 +60,9 @@ public class TemporalScalarsTest {
         java.sql.Date sqlDate = java.sql.Date.valueOf(LocalDate.parse("2017-06-24"));
         Time sqlTime = Time.valueOf(LocalTime.parse("23:15:44"));
         Timestamp sqlTimestamp = Timestamp.valueOf(LocalDateTime.parse("2017-06-24T23:15:44.500"));
-        assertEquals(dateCoercing.serialize(sqlDate), sqlDateCoercing.serialize(sqlDate));
-        assertEquals(dateCoercing.serialize(sqlTime), sqlTimeCoercing.serialize(sqlTime));
-        assertEquals(dateCoercing.serialize(sqlTimestamp), sqlTimestampCoercing.serialize(sqlTimestamp));
+        assertEquals(dateCoercing.serialize(sqlDate, null, null), sqlDateCoercing.serialize(sqlDate, null, null));
+        assertEquals(dateCoercing.serialize(sqlTime, null, null), sqlTimeCoercing.serialize(sqlTime, null, null));
+        assertEquals(dateCoercing.serialize(sqlTimestamp, null, null), sqlTimestampCoercing.serialize(sqlTimestamp, null, null));
     }
 
     @Test
@@ -116,26 +117,26 @@ public class TemporalScalarsTest {
     }
 
     private void testStringTemporal(Class type, Coercing coercing, String expected, String stringLiteral) {
-        Object parsed = coercing.parseLiteral(new StringValue(stringLiteral));
+        Object parsed = coercing.parseLiteral(new StringValue(stringLiteral), CoercedVariables.emptyVariables(), null,null);
         assertTrue(type.isInstance(parsed));
-        assertEquals(expected, coercing.serialize(parsed));
+        assertEquals(expected, coercing.serialize(parsed, null, null));
 
-        parsed = coercing.parseValue(stringLiteral);
+        parsed = coercing.parseValue(stringLiteral, null, null);
         assertTrue(type.isInstance(parsed));
-        assertEquals(expected, coercing.serialize(parsed));
+        assertEquals(expected, coercing.serialize(parsed, null, null));
         
-        Object same = coercing.parseValue(parsed);
+        Object same = coercing.parseValue(parsed, null, null);
         assertEquals(parsed, same);
     }
     
     private void testEpochMilliTemporal(Class type, Coercing coercing, String expected, long literal) {
-        Object parsed = coercing.parseLiteral(new IntValue(new BigInteger(Long.toString(literal))));
+        Object parsed = coercing.parseLiteral(new IntValue(new BigInteger(Long.toString(literal))), CoercedVariables.emptyVariables(), null, null);
         assertTrue(type.isInstance(parsed));
-        assertEquals(expected, coercing.serialize(parsed));
+        assertEquals(expected, coercing.serialize(parsed, null, null));
         
-        parsed = coercing.parseValue(literal);
+        parsed = coercing.parseValue(literal, null, null);
         assertTrue(type.isInstance(parsed));
-        assertEquals(expected, coercing.serialize(parsed));
+        assertEquals(expected, coercing.serialize(parsed, null, null));
     }
     
     private void testTemporalMapping(Class type, GraphQLScalarType scalar) {
