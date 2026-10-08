@@ -977,7 +977,7 @@ public class GraphQLSchemaGenerator {
                     .build());
         }
 
-        Set<GraphQLType> additional = new HashSet<>(additionalTypes.values());
+        Set<GraphQLNamedType> additional = new HashSet<>(additionalTypes.values());
         additional.addAll(buildContext.typeRegistry.getDiscoveredTypes());
         builder.additionalTypes(additional);
 
